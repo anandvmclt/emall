@@ -56,7 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'emall.urls'
 
-# AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.User'
 
 
 TEMPLATES = [
