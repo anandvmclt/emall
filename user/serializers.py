@@ -17,7 +17,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             'user_scope': {'required': False},
         }
 
-    # def create(self, validated_data):
-    #     if 'username' not in validated_data:
-    #         raise ValidationError({'username': 'This field is required'})
-    #     return User.objects.create_user(**validated_data)
+    def create(self, validated_data):
+        if 'username' not in validated_data:
+            raise ValidationError({'username': 'This field is required'})
+        return User.objects.create_user(**validated_data)
+    
+
+    # Logged user can see his profile on dashboard.
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'uuid', 'first_name', 'last_name', 'email', 'username',
+                 'mobile', 'status','created_at')
