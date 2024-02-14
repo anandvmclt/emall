@@ -2,6 +2,9 @@
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
+from django.dispatch import receiver
+import random
+from django.db.models.signals import pre_save, post_save
 
 
 User = get_user_model()
@@ -32,4 +35,16 @@ class Orders(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_orders')
 
     def __str__(self):
-        return self.name
+        return str(self.uuid)
+
+# Generate  Default Order ID 
+@receiver(post_save, sender=Orders)
+def order_id_gen(sender, instance, created, **kwargs):
+    try:
+        if not instance.order_id:
+            instance.order_id = random.randint(100001, 999999)
+            instance.save()
+    
+    except Exception as ex:
+       print(ex)
+       pass
