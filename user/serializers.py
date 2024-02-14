@@ -4,6 +4,8 @@ from rest_framework import serializers
 from .models import User
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
