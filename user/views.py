@@ -118,3 +118,26 @@ class UserProfileView(RetrieveUpdateAPIView):
             logger.error(ex)
             res_data = {'success': False, "message": 'Some thing went wrong', 'data': err_msg(ex)}
             return Response(res_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+# User change password
+class ChangePasswordView(APIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request):
+        try:
+            serializer = self.serializer_class(data=request.data, context={'request': request})
+            if serializer.is_valid():
+                serializer.update(request.user, serializer.validated_data)
+                return Response({'success': True, 'message': 'Password updated successfully', 'data': {}},
+                                status=status.HTTP_200_OK)
+
+            res_data = {"error": err_msg(serializer.errors)}
+            return Response({'success': False, 'message': 'Failed to updated Password', 'data': res_data},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            logger.error(ex)
+            res_data = {'success': False, "message": 'Some thing went wrong', 'data': err_msg(ex)}
+            return Response(res_data, status=status.HTTP_400_BAD_REQUEST)
