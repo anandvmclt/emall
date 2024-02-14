@@ -8,7 +8,9 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView
 from .common import err_msg
+from .rbac import IsManager
 # Create your views here.
 
 logger = logging.getLogger("django")
@@ -141,3 +143,12 @@ class ChangePasswordView(APIView):
             logger.error(ex)
             res_data = {'success': False, "message": 'Some thing went wrong', 'data': err_msg(ex)}
             return Response(res_data, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+
+# List and create users
+class UserListCreateView(ListCreateAPIView):
+    permission_classes = (IsAuthenticated,IsManager)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

@@ -179,3 +179,5 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# Change Backend to Django Anymail or SMTP Emails.
+# Send Emails using  SMTP Credentials or APIKeys (Mailjet / mailGun etc..)
