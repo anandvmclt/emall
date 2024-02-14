@@ -13,7 +13,7 @@ def index(request):
     return JsonResponse({"message": "Welcome !"})
 
 
-
+# List and create new Category
 class CategoryListCreateView(ListCreateAPIView):
     permission_classes = (IsGetOrAdmin,)
     queryset = Category.objects.filter(is_deleted=False, status=True).order_by('-id')
@@ -24,3 +24,17 @@ class CategoryDetailsAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsGetOrAdmin,)
     queryset = Category.objects.filter(is_deleted=False).order_by('-id')
     serializer_class = CategorySerializer
+
+
+
+# List and create products
+class ProductListCreateView(ListCreateAPIView):
+    permission_classes = (IsGetOrAdmin,)
+    queryset = Product.objects.filter(is_deleted=False, status=True).order_by('-id')
+    serializer_class = ProductSerializer
+
+
+class ProductDetailsAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsGetOrAdmin,)
+    queryset = Product.objects.filter(is_deleted=False).order_by('-id')
+    serializer_class = ProductSerializer
