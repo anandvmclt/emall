@@ -11,8 +11,9 @@ from rest_framework import generics, status, permissions
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-from user.rbac import IsAdmin, IsGetOrAdmin
-from .models import Orders
+from user.rbac import IsAdmin, IsGetOrAdmin, IsManager
+from .models import Orders, OrderStatus
+from rest_framework.views import APIView
 from .serializers import OrdersSerializer,OrderDetailSerializer
 # Create your views here.
 
@@ -87,3 +88,32 @@ class OrdersDetailsAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = (IsGetOrAdmin,)
     queryset = Orders.objects.filter(is_deleted=False).order_by('-id')
     serializer_class = OrderDetailSerializer
+    lookup_field = 'uuid'
+
+    # Change Order status
+
+    
+class ChangeOrderStatusView(APIView):
+
+    permission_classes = (IsManager,)
+
+    def post(self, request, uuid):
+      try:
+        data = request.data
+        new_status = data.get("order_status")
+        # Check for valid order status submitted
+        if new_status not in [choice[0] for choice in OrderStatus.ORDER_STATUS]:
+            return Response({"status": False, "message": "Invalid Order Status", "data": OrderStatus.ORDER_STATUS},status=status.HTTP_400_BAD_REQUEST)
+
+        # Find order object using uuid.
+        order = Orders.objects.filter(uuid=uuid).first()
+        if order:
+            order.order_status = new_status
+            order.save()
+            return Response({"status": True, "message": "Updated Order Status", "data": {}},status=status.HTTP_200_OK)
+        
+        return Response({"status": False, "message": "Order not found", "data": {}},status=status.HTTP_404_NOT_FOUND)
+      
+      except Exception as e:
+          logger.error(f"Order Listing API : {e}")
+          return Response({"status": False, "message": "Something went wrong", "data": {}},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

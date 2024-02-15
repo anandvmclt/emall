@@ -5,5 +5,6 @@ from .views import *
 
 urlpatterns = [
     path('order-list/', OrdersListCreateView.as_view(), name="order-list"),
-    path('order-details/<int:pk>/', OrdersDetailsAPIView.as_view(), name="order-details"),
+    path('order-details/<str:uuid>/', OrdersDetailsAPIView.as_view(), name="order-details"),
+    path('change-status/<str:uuid>/', ChangeOrderStatusView.as_view(), name="change-status"),
 ]
