@@ -5,9 +5,10 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics, status, permissions
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
 from user.rbac import IsAdmin, IsGetOrAdmin
 from .models import Orders
-from rest_framework.response import Response
 from .serializers import OrdersSerializer
 # Create your views here.
 
@@ -21,18 +22,30 @@ class OrdersListCreateView(ListCreateAPIView):
     queryset = Orders.objects.filter(is_deleted=False, status=True).order_by('id')
     serializer_class = OrdersSerializer
     pagination_class = LimitOffsetPagination
+    filter_backends = [SearchFilter]
+    search_fields = ['order_id', 'customer', 'order_status', 'uuid']
 
     def list(self, request, *args, **kwargs):
         try:
             user = self.request.user
             # access queryset from class level object
             queryset = self.get_queryset()
+            filter_field = self.request.query_params.get('filter_field')  # Get the dynamic filter field
+            filter_value = self.request.query_params.get('filter_value')  # Get the filter value
+
             if user.user_scope in ("MANAGER", "ADMIN"):
                 queryset = queryset # No changes in query set for this condition
             else:
                  # added extra filter for queryset.
+        
                  queryset = queryset.filter(**{'customer':user})
             
+
+            # Filtering based on keys and values from request parameters
+            if filter_field and filter_value:
+                filter_args = {filter_field: filter_value}
+                queryset = queryset.filter(**filter_args)
+
             # Accessing pagination class and generating paginated queryset
             page = self.paginate_queryset(queryset)
 
