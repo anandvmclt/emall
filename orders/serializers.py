@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 from .models import Orders
+from products.models import Product
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -27,6 +28,7 @@ class UserNestedSerializer(serializers.ModelSerializer):
 class OrderDetailSerializer(serializers.ModelSerializer):
 
     customer = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     class Meta:
         model = Orders
         fields = "__all__"
@@ -34,11 +36,21 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     def get_customer(self, obj):
         try:
             if obj.customer is not None:
-                # serializer  = UserNestedSerializer(obj.customer)
-                # return serializer.data
-                user = User.objects.get(id=obj.customer.id)
-                return user.username
+                serializer  = UserNestedSerializer(obj.customer)
+                return serializer.data
+                # user = User.objects.get(id=obj.customer.id)
+                # return user.username
 
+            return None
+        except Exception as ex:
+            return None
+        
+    
+    def get_product(self, obj):
+        try:
+            if obj.product:
+                product = Product.objects.get(id=obj.product.id)
+                return product.name
             return None
         except Exception as ex:
             return None

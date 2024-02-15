@@ -2,6 +2,7 @@
 from django.db.models import Q
 from functools import reduce
 import operator
+import logging
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
@@ -15,7 +16,14 @@ from .models import Orders
 from .serializers import OrdersSerializer,OrderDetailSerializer
 # Create your views here.
 
+
+logger = logging.getLogger("django")
+
+
 def index(request):
+    logger.info("Logger ok")
+    logger.warning("Logger Warning")
+    logger.debug("Logger Debug")
     return JsonResponse({"message": "Welcome !"})
 
 
@@ -29,6 +37,7 @@ class OrdersListCreateView(ListCreateAPIView):
     search_fields = ['order_id', 'customer', 'order_status', 'uuid']
 
     def list(self, request, *args, **kwargs):
+        
         try:
             user = self.request.user
             # access queryset from class level object
@@ -70,7 +79,7 @@ class OrdersListCreateView(ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         except Exception as e:
-            print(e)
+            logger.error(f"Order Listing API : {e}")
             return Response("Something went wrong", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
