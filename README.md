@@ -55,3 +55,21 @@ Certainly! Let's break down the key concepts in Django REST Framework (DRF) for 
 - Combine `ListCreateView` and `RetrieveUpdateView` for efficient list/create and retrieve/update operations.
 - Explore `ViewSet` for organizing views based on actions.
 - Serializers are crucial for transforming complex data.
+
+
+
+# Statelessness
+
+In REST architecture, statelessness refers to a communication method in which the server completes every client request independently of all previous requests. Clients can request resources in any order, and every request is stateless or isolated from other requests
+
+Statelessness in Django:
+Django, by design, follows the statelessness principle of web development. This means that each request from a client to the server is independent, and the server doesn't retain information about previous requests.
+
+Advantages of Statelessness:
+
+Simplifies server architecture.
+Enhances scalability.
+Easier to maintain and debug.
+Challenges:
+
+For some applications, maintaining state across requests is necessary (e.g., user sessions). Django addresses this through session management.
