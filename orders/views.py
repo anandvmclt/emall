@@ -95,7 +95,7 @@ class OrdersDetailsAPIView(RetrieveUpdateDestroyAPIView):
     
 class ChangeOrderStatusView(APIView):
 
-    permission_classes = (IsManager,)
+    permission_classes =  (IsAuthenticated, IsManager | IsAdmin)
 
     def post(self, request, uuid):
       try:
