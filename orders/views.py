@@ -31,7 +31,7 @@ class OrdersListCreateView(ListCreateAPIView):
                 queryset = queryset # No changes in query set for this condition
             else:
                  # added extra filter for queryset.
-                 queryset = queryset.filter({'customer':user})
+                 queryset = queryset.filter(**{'customer':user})
             
             # Accessing pagination class and generating paginated queryset
             page = self.paginate_queryset(queryset)
