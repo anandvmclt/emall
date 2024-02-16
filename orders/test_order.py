@@ -23,7 +23,7 @@ def add_one(x):
 
 
 def test_answer_wrong():
-    assert add_one(3) == 5
+    assert add_one(3) == 4
 
 def test_answer_ok():
     assert add_one(4) == 5

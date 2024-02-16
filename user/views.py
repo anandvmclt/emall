@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.generics import ListCreateAPIView
 from .common import err_msg
-from .rbac import IsManager
+from .rbac import IsManager, IsAdmin
 # Create your views here.
 
 logger = logging.getLogger("django")
@@ -149,6 +149,6 @@ class ChangePasswordView(APIView):
 
 # List and create users
 class UserListCreateView(ListCreateAPIView):
-    permission_classes = (IsAuthenticated,IsManager)
+    permission_classes = (IsAuthenticated,IsManager | IsAdmin)
     queryset = User.objects.all()
     serializer_class = UserSerializer

@@ -18,5 +18,5 @@ urlpatterns = [
     path('change-password/',ChangePasswordView.as_view(), name='change-password'),
     path('password-forgot/', include('django_rest_passwordreset.urls', namespace='password_forgot')),
     path('password-forgot/confirm', reset_password_confirm, name='password_forgot_confirm'),
-    path('users', UserListCreateView.as_view(), name='user-list-create'),
+    path('users/', UserListCreateView.as_view(), name='user-list-create'),
 ]
