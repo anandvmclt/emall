@@ -84,8 +84,10 @@ django.core.cache.backends.locmem.LocMemCache for the local memory cache.
 
 LOCATION: A unique identifier for the local memory cache. It can be any string;
  we're using 'unique-snowflake'.
- 
+
 CACHE_TIMEOUT: Specifies the default cache timeout for API responses.
  This value is in seconds. In the example, it's set to 60 seconds.
 
 """
+
+# Swagger Documentation
