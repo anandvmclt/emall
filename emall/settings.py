@@ -237,3 +237,14 @@ LOGGING = {
         },
     }
 }
+
+# Use Django's local memory cache for demonstration purposes
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Set a custom cache timeout for API responses (in seconds)
+CACHE_TIMEOUT = 60
