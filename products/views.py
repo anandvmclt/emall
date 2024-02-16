@@ -5,11 +5,13 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Category,Product
 from .serializer import ProductSerializer, CategorySerializer
 from user.rbac import IsAdmin, IsGetOrAdmin
+# Importing cashing
 from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, status
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 
@@ -47,26 +49,27 @@ class ProductDetailsAPIView(RetrieveUpdateDestroyAPIView):
 
 class ProductListView(APIView):
     # Use the cache_page decorator to cache the API response for 60 seconds
-    @cache_page(60)
+    @method_decorator(cache_page(600))
     def get(self, request):
         try:
             # Check if the data is already in the cache
             cached_data = cache.get('product_list')
             if cached_data:
-                return Response(cached_data)
+                return Response(cached_data, status=status.HTTP_200_OK)
 
             # If not in cache, fetch the data from the database
-            products = Product.objects.all()
+            products = Product.objects.filter(is_deleted=False).order_by('-id')
             serializer = ProductSerializer(products, many=True)
 
             # Store the data in the cache for future requests
-            cache.set('product_list', serializer.data, 60)
+            cache.set('product_list', serializer.data)
 
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+
+
 
 # Cashing explanations.
 """ 
