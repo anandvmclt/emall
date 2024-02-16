@@ -88,8 +88,6 @@ class ViewUsersAPITestCase(TestCase):
             username='demo_user_2', first_name='Demo', last_name='User 2', email='demo2@example.com',
             user_scope='USER', mobile='9876543210'
         )
-
-
     
     def test_list_users(self):
         response = self.client.get(f'{self.base_url}/users/')
